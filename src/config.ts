@@ -13,6 +13,22 @@ function getEnv(key: string): string {
   return value;
 }
 
+function parseTokenWhitelist(envVar?: string) {
+  if (!envVar) return {};
+  return Object.fromEntries(
+    envVar.split(',').map((entry) => {
+      const [address, limitStr] = entry.split(':');
+      return [
+        address,
+        {
+          allowed: true,
+          limit: limitStr === 'MAX' ? UINT256_MAX : limitStr,
+        },
+      ];
+    }),
+  );
+}
+
 const eip721 = {
   domain: {
     name: 'FastWithdrawVault',
@@ -45,18 +61,8 @@ export const config = {
   },
 
   tokenWhitelist: {
-    host: {
-      '0x38cb00e044D3cdD3c9f90B7efDE61ef62e38fdf3': {
-        allowed: true,
-        limit: UINT256_MAX,
-      },
-    },
-    validium: {
-      '0x928a1909DB63ae7813E6318D098fd17439eC0a49': {
-        allowed: true,
-        limit: UINT256_MAX,
-      },
-    },
+    host: parseTokenWhitelist(process.env.TOKEN_WHITELIST_HOST),
+    validium: parseTokenWhitelist(process.env.TOKEN_WHITELIST_VALIDIUM),
   },
 
   db: {
