@@ -15,7 +15,7 @@ const contract = new ethers.Contract(config.contracts.validiumERC20Gateway, abi,
 
 async function indexBlocks(fromBlock: number, toBlock: number) {
   logger.debug(`Indexing block range: ${fromBlock} - ${toBlock}`);
-  const events = await contract.queryFilter('WithdrawERC20', fromBlock, toBlock);
+  const events = await contract.queryFilter('WithdrawERC20', Number(fromBlock), Number(toBlock));
   if (events.length > 0) logger.debug(`${events.length} events found`);
 
   for (const event of events) {
@@ -68,6 +68,7 @@ export async function indexTransactions() {
       await indexBlocks(fromBlock, toBlock);
     } catch (err) {
       logger.error(`Unexpected error while indexing events: ${err}`);
+      await sleep(sleepMs);
       continue;
     }
 
