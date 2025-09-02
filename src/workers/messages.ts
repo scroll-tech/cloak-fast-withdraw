@@ -80,9 +80,9 @@ export async function processMessage(
   } catch (err: unknown) {
     logger.warn(`Transaction simulation failed for message: ${m.message_hash}`);
 
-    // @ts-ignore
+    // @ts-expect-error Error type is unknown.
     if (err.code !== 'CALL_EXCEPTION') {
-      // @ts-ignore
+      // @ts-expect-error Error type is unknown.
       logger.error(`Unknown error: ${err.code}`);
       return;
     }
