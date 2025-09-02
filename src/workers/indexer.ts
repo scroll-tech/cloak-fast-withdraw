@@ -14,7 +14,6 @@ const validiumProvider = new ethers.JsonRpcProvider(config.endpoints.validium);
 const contract = new ethers.Contract(config.contracts.validiumERC20Gateway, abi, validiumProvider);
 
 async function indexBlocks(fromBlock: number, toBlock: number) {
-  logger.debug(`typeof(fromBlock) = ${typeof fromBlock}, typeof(toBlock) = ${typeof toBlock}`)
   logger.debug(`Indexing block range: ${fromBlock} - ${toBlock}`);
   const events = await contract.queryFilter('WithdrawERC20', Number(fromBlock), Number(toBlock));
   if (events.length > 0) logger.debug(`${events.length} events found`);
@@ -52,14 +51,11 @@ export async function indexTransactions() {
   // Resume from the last processed block
   let lastPersistedBlock = await indexer_state.get();
   let lastProcessedBlock = lastPersistedBlock;
-
   logger.debug(`Resuming from last processed block: ${lastProcessedBlock}`);
 
   while (true) {
     const latest = await validiumProvider.getBlockNumber();
     const target = Math.max(0, latest - confirmations);
-
-    logger.debug(`Target block for indexing: ${target}`);
 
     if (target <= lastProcessedBlock) {
       await sleep(sleepMs);

@@ -4,7 +4,7 @@ export const TABLE_NAME = 'indexer_state';
 
 export async function get(): Promise<number> {
   const row = await db(TABLE_NAME).select('last_processed_block').first();
-  return row?.last_processed_block ?? 0;
+  return Number(row?.last_processed_block ?? 0);
 }
 
 export async function set(last_processed_block: number) {
