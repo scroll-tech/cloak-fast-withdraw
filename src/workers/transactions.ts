@@ -21,7 +21,7 @@ async function resendTx(tx: transactions.Transaction, failure_reason: string | n
   await processMessage(message, async (newTx: transactions.Transaction) => {
     await db.transaction(async (dbTx) => {
       await dbTx(transactions.TABLE_NAME)
-        .where({ hash: tx.hash })
+        .where({ id: tx.id, hash: tx.hash })
         .update({ status: 'FAILED', failure_reason, updated_at: db.fn.now() });
       await dbTx(transactions.TABLE_NAME).insert(newTx);
     });
@@ -38,7 +38,7 @@ async function processTransaction(tx: transactions.Transaction) {
     logger.debug(`Transaction is confirmed: ${tx.hash}`);
 
     return await db(transactions.TABLE_NAME)
-      .where({ hash: tx.hash })
+      .where({ id: tx.id, hash: tx.hash })
       .update({ status: 'SUCCESSFUL', updated_at: db.fn.now() });
   }
 
