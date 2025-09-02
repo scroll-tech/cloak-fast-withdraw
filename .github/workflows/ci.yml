@@ -8,7 +8,7 @@ on:
 
 jobs:
   eslint:
-    name: ESLint
+    name: eslint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,7 +19,7 @@ jobs:
       - run: npm run lint:ci
 
   prettier:
-    name: Prettier
+    name: prettier
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -30,7 +30,7 @@ jobs:
       - run: npm run format:check
 
   typecheck:
-    name: Prettier
+    name: typecheck
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
