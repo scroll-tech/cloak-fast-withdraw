@@ -77,11 +77,12 @@ export async function processMessage(
   // First, try simulating the transaction
   try {
     await contract.claimFastWithdraw.staticCallResult(...txParams);
-  } catch (err: any) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: unknown) {
     logger.warn(`Transaction simulation failed for message: ${m.message_hash}`);
 
+    // @ts-ignore
     if (err.code !== 'CALL_EXCEPTION') {
+      // @ts-ignore
       logger.error(`Unknown error: ${err.code}`);
       return;
     }
