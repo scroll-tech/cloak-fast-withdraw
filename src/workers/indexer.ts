@@ -15,10 +15,10 @@ const contract = new ethers.Contract(config.contracts.validiumERC20Gateway, abi,
 
 async function indexBlocks(fromBlock: number, toBlock: number) {
   logger.debug(`Indexing block range: ${fromBlock} - ${toBlock}`);
-  const events = await contract.queryFilter('WithdrawERC20', Number(fromBlock), Number(toBlock));
+  let events = await contract.queryFilter('WithdrawERC20', [Number(fromBlock)], Number(toBlock));
   if (events.length > 0) logger.debug(`${events.length} events found`);
 
-  for (const event of events) {
+  for (const event of events ) {
     const hash = event.transactionHash;
     const withdrawTo = (event as EventLog).args.getValue('to');
 

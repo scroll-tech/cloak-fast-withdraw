@@ -3,14 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "build": "tsc",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "start": "node dist/index.js",
     "migrate": "knex --knexfile knexfile.js migrate:latest",
     "migrate:make": "knex --knexfile knexfile.js migrate:make",
     "migrate:rollback": "knex --knexfile knexfile.js migrate:rollback",
-    "lint": "prettier --check \"src/**/*.ts\"",
-    "lint:fix": "prettier --write \"src/**/*.ts\""
+    "lint": "eslint src --ext .js,.ts",
+    "lint:ci": "eslint src --ext .js,.ts --max-warnings=0",
+    "format:check": "prettier --check src",
+    "format:write": "prettier --write src"
   },
   "dependencies": {
     "commander": "^13.1.0",
@@ -22,9 +25,14 @@
     "winston": "^3.17.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.34.0",
     "@types/node": "^24.3.0",
+    "eslint": "^9.34.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^16.3.0",
     "prettier": "^3.6.0",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.9.0"
+    "typescript": "^5.9.0",
+    "typescript-eslint": "^8.42.0"
   }
 }

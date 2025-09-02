@@ -18,6 +18,7 @@ const wallet = new ethers.Wallet(config.signers.host, hostProvider);
 
 const contract = new ethers.Contract(config.contracts.hostFastWithdrawVault, abi, wallet);
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function decodeRevertReason(error: any): string {
   try {
     // some providers put the data in error.data or error.body
@@ -53,7 +54,10 @@ async function insertTx(tx: transactions.Transaction) {
   });
 }
 
-export async function processMessage(m: messages.Message, persistTransaction: any) {
+export async function processMessage(
+  m: messages.Message,
+  persistTransaction: (tx: transactions.Transaction) => void,
+) {
   logger.info(`Processing message: ${m.message_hash}`);
 
   const txParams = [
@@ -74,6 +78,7 @@ export async function processMessage(m: messages.Message, persistTransaction: an
   try {
     await contract.claimFastWithdraw.staticCallResult(...txParams);
   } catch (err: any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     logger.warn(`Transaction simulation failed for message: ${m.message_hash}`);
 
     if (err.code !== 'CALL_EXCEPTION') {
@@ -115,7 +120,7 @@ export async function processMessage(m: messages.Message, persistTransaction: an
 
   // Prepare tx and write to db before broadcasting,
   // to ensure that we have a record of the transaction.
-  let txRequest = await contract.claimFastWithdraw.populateTransaction(...txParams);
+  const txRequest = await contract.claimFastWithdraw.populateTransaction(...txParams);
   const tx = await wallet.populateTransaction(txRequest); // add chain id, etc.
   const signedTx = await wallet.signTransaction(tx); // sign into raw tx
   const txHash = ethers.keccak256(signedTx); // compute hash

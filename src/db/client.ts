@@ -2,7 +2,7 @@ import knex, { Knex } from 'knex';
 
 import { config } from '../config';
 
-let dbConfig: Knex.Config =
+const dbConfig: Knex.Config =
   config.db.client === 'pg'
     ? {
         client: 'pg',

@@ -42,7 +42,7 @@ async function show(w: withdrawals.Withdrawal) {
   const reject_reason = w.reject_reason ?? '';
   console.log(grey('[withdraw]'), w.validium_tx_hash, status(w.status), red(reject_reason));
 
-  let ms = await db<messages.Message>(messages.TABLE_NAME)
+  const ms = await db<messages.Message>(messages.TABLE_NAME)
     .select('*')
     .where({ validium_tx_hash: w.validium_tx_hash })
     .orderBy('id', 'asc');
@@ -51,7 +51,7 @@ async function show(w: withdrawals.Withdrawal) {
     const message_hash = m.message_hash;
     console.log(grey('  [message]'), message_hash, status(m.status));
 
-    let txs = await db<transactions.Transaction>(transactions.TABLE_NAME)
+    const txs = await db<transactions.Transaction>(transactions.TABLE_NAME)
       .select('*')
       .where({ message_hash })
       .orderBy('id', 'asc');
@@ -66,7 +66,7 @@ async function show(w: withdrawals.Withdrawal) {
 async function showVerbose(w: withdrawals.Withdrawal) {
   console.log('\nwithdrawal', w);
 
-  let ms = await db<messages.Message>(messages.TABLE_NAME)
+  const ms = await db<messages.Message>(messages.TABLE_NAME)
     .select('*')
     .where({ validium_tx_hash: w.validium_tx_hash })
     .orderBy('id', 'asc');
@@ -76,7 +76,7 @@ async function showVerbose(w: withdrawals.Withdrawal) {
   }
 
   for (const m of ms) {
-    let txs = await db<transactions.Transaction>(transactions.TABLE_NAME)
+    const txs = await db<transactions.Transaction>(transactions.TABLE_NAME)
       .select('*')
       .where({ message_hash: m.message_hash })
       .orderBy('id', 'asc');
@@ -88,7 +88,7 @@ async function showVerbose(w: withdrawals.Withdrawal) {
 }
 
 async function inspect(validium_tx_hash: string, { verbose }: { verbose?: boolean }) {
-  let withdrawal = await db<withdrawals.Withdrawal>(withdrawals.TABLE_NAME)
+  const withdrawal = await db<withdrawals.Withdrawal>(withdrawals.TABLE_NAME)
     .select('*')
     .where({ validium_tx_hash })
     .first();

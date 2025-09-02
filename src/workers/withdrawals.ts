@@ -49,6 +49,7 @@ function parseMessages(logs: readonly Log[]): Request[] {
       acc[e.name] = acc[e.name] || [];
       acc[e.name].push(e.args);
       return acc;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }, {} as any);
 
   const requests = [];
@@ -88,7 +89,9 @@ function validateRequests(requests: Request[]): string | null {
 
     // Only allow whitelisted tokens.
     if (
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       !(config.tokenWhitelist.host as Record<string, any>)[request.l1Token]?.allowed &&
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       !(config.tokenWhitelist.validium as Record<string, any>)[request.l2Token]?.allowed
     ) {
       return `Invalid token, host: ${request.l1Token}, validium: ${request.l2Token}`;
