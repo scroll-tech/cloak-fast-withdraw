@@ -63,6 +63,7 @@ export async function processMessage(m: messages.Message, persistTransaction: an
     m.message_hash,
     m.permit,
     {
+      from: wallet.address,
       gasLimit,
       // TODO: implement proper nonce management
       nonce: await hostProvider.getTransactionCount(wallet.address),

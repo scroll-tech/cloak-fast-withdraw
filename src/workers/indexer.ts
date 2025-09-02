@@ -15,7 +15,7 @@ const contract = new ethers.Contract(config.contracts.validiumERC20Gateway, abi,
 
 async function indexBlocks(fromBlock: number, toBlock: number) {
   logger.debug(`Indexing block range: ${fromBlock} - ${toBlock}`);
-  const events = await contract.queryFilter('WithdrawERC20', fromBlock, toBlock);
+  const events = await contract.queryFilter('WithdrawERC20', Number(fromBlock), Number(toBlock));
   if (events.length > 0) logger.debug(`${events.length} events found`);
 
   for (const event of events) {
@@ -51,6 +51,7 @@ export async function indexTransactions() {
   // Resume from the last processed block
   let lastPersistedBlock = await indexer_state.get();
   let lastProcessedBlock = lastPersistedBlock;
+  logger.debug(`Resuming from last processed block: ${lastProcessedBlock}`);
 
   while (true) {
     const latest = await validiumProvider.getBlockNumber();
@@ -63,7 +64,14 @@ export async function indexTransactions() {
 
     const fromBlock = lastProcessedBlock + 1;
     const toBlock = Math.min(target, fromBlock + batchSize - 1);
-    await indexBlocks(fromBlock, toBlock);
+
+    try {
+      await indexBlocks(fromBlock, toBlock);
+    } catch (err) {
+      logger.error(`Unexpected error while indexing events: ${err}`);
+      await sleep(sleepMs);
+      continue;
+    }
 
     lastProcessedBlock = toBlock;
 

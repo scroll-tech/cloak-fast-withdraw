@@ -18,7 +18,7 @@ async function resendTx(tx: transactions.Transaction, failure_reason: string | n
   const message = await messages.get(tx.message_hash);
   if (!message) return; // TODO
 
-  processMessage(message, async (newTx: transactions.Transaction) => {
+  await processMessage(message, async (newTx: transactions.Transaction) => {
     await db.transaction(async (dbTx) => {
       await dbTx(transactions.TABLE_NAME)
         .where({ hash: tx.hash })
