@@ -63,7 +63,13 @@ export async function indexTransactions() {
 
     const fromBlock = lastProcessedBlock + 1;
     const toBlock = Math.min(target, fromBlock + batchSize - 1);
-    await indexBlocks(fromBlock, toBlock);
+
+    try {
+      await indexBlocks(fromBlock, toBlock);
+    } catch (err) {
+      logger.error(`Unexpected error while indexing events: ${err}`);
+      continue;
+    }
 
     lastProcessedBlock = toBlock;
 
