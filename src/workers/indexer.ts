@@ -28,7 +28,7 @@ async function indexBlocks(fromBlock: number, toBlock: number) {
     }
 
     // idempotent insert
-    withdrawals.insert(hash);
+    await withdrawals.insert(hash);
   }
 }
 

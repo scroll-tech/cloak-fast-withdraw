@@ -1,7 +1,7 @@
 import { getAddress } from 'ethers';
-import dotenv from 'dotenv';
 
-dotenv.config();
+import dotenv from 'dotenv';
+dotenv.config({ quiet: true });
 
 const UINT256_MAX = (1n << 256n) - 1n;
 
@@ -49,6 +49,9 @@ const eip721 = {
 };
 
 export const config = {
+  port: Number(getEnv('PORT')),
+  logLevel: process.env.LOG_LEVEL || 'info',
+
   endpoints: {
     host: getEnv('HOST_ENDPOINT'),
     validium: getEnv('VALIDIUM_ENDPOINT'),
