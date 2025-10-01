@@ -1,8 +1,11 @@
 import winston, { format } from 'winston';
 
+import { config } from './config';
+
 export default winston.createLogger({
-  level: process.env.LOG_LEVEL || 'info',
+  level: config.logLevel,
   format: format.combine(
+    format.splat(),
     format.colorize(),
     format.timestamp(),
     format.printf(
