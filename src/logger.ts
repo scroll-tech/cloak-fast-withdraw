@@ -5,6 +5,7 @@ import { config } from './config';
 export default winston.createLogger({
   level: config.logLevel,
   format: format.combine(
+    format.splat(),
     format.colorize(),
     format.timestamp(),
     format.printf(
