@@ -1,5 +1,5 @@
 {
-  "name": "cloak-fast-withdraw",
+  "name": "@scroll-tech/cloak-fast-withdraw",
   "version": "0.1.0",
   "private": true,
   "scripts": {
